@@ -1,0 +1,33 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// schema.prisma
+
+model Task {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String @unique
+  description String @unique
+  teams       Team[]
+}
+
+model Team {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String     @unique
+  employees Employee[]
+  Task      Task?      @relation(fields: [taskId], references: [id])
+  taskId    String?    @db.ObjectId
+}
+
+model Employee {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  name   String @unique
+  email  String @unique
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String @db.ObjectId
+}
