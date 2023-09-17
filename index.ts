@@ -90,6 +90,10 @@ const addEmpToTeam = async (
       name: teamName,
     },
   });
+  if (!team) {
+    console.log("Team not found");
+    return;
+  }
   await prisma.employee.create({
     data: {
       name: empName,
@@ -101,19 +105,38 @@ const addEmpToTeam = async (
       },
     },
   });
-  console.log(`Employee ${empName} added to team ${teamName}`)
+  console.log(`Employee ${empName} added to team ${teamName}`);
 };
 
 const deleteEmp = async (empName: string) => {
+  const emp = await prisma.employee.findUnique({
+    where: {
+      name: empName,
+    },
+  });
+
+  if (!emp) {
+    console.log("Employee not found");
+    return;
+  }
   await prisma.employee.delete({
     where: {
       name: empName,
     },
   });
-  console.log(`Employee ${empName} deleted`)
+  console.log(`Employee ${empName} deleted`);
 };
 
 const updateEmpMail = async (empName: string, newMail: string) => {
+  const emp = await prisma.employee.findUnique({
+    where: {
+      name: empName,
+    },
+  });
+  if (!emp) {
+    console.log("Employee not found");
+    return;
+  }
   await prisma.employee.update({
     where: {
       name: empName,
@@ -127,12 +150,12 @@ const updateEmpMail = async (empName: string, newMail: string) => {
 
 const main = async () => {
   await insertData();
-//   await getTasks();
-//   await getTeams("Team_1");
-//   await addEmpToTeam("Team_1", "Parthib", "emp@123");
-//   await deleteEmp("Parthib");
-//   await updateEmpMail("Emp_1", "hello@123");
-  await getTeams("Team_1");
+  await getTasks();
+  // await getTeams("Team_1");
+  // await addEmpToTeam("Team_3", "Parthib", "emp@123");
+  // await deleteEmp("Parthib");
+  // await updateEmpMail("Emp_1", "emp1@gmail.com");
+  // await getTeams("Team_1");
 };
 
 main()
